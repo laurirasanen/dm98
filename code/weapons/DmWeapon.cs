@@ -13,7 +13,9 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 	[Net]
 	public int AmmoClip { get; set; }
 
-	public virtual AmmoType AmmoType => AmmoType.Pistol;
+	[Net]
+	public int AmmoReserve { get; set; }
+
 	public virtual int ClipSize => 16;
 	public virtual float ReloadTime => 3.0f;
 
@@ -26,8 +28,7 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 
 	public int AvailableAmmo()
 	{
-		var owner = Owner as DeathmatchPlayer;
-		return owner.AmmoCount( AmmoType );
+		return AmmoClip + AmmoReserve;
 	}
 
 	public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
@@ -51,13 +52,10 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 
 		using ( Prediction.Off() )
 		{
-			if ( Owner  is DeathmatchPlayer player )
-			{
-				if ( player.AmmoCount( AmmoType ) <= 0 )
-					return;
+			if ( AmmoReserve <= 0 )
+				return;
 
-				StartReloadEffects();
-			}
+			StartReloadEffects();
 
 			IsReloading = true;
 			Owner.SetAnimParam( "b_reload", true ); 
@@ -85,14 +83,12 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 	{
 		IsReloading = false;
 
-		if ( Owner is DeathmatchPlayer player )
-		{
-			var ammo = player.TakeAmmo( AmmoType, ClipSize - AmmoClip );
-			if ( ammo == 0 )
-				return;
+		var ammo = Math.Min(ClipSize - AmmoClip, AmmoReserve);
+		if ( ammo == 0 )
+			return;
 
-			AmmoClip += ammo;
-		}
+		AmmoClip += ammo;
+		AmmoReserve -= ammo;
 	}
 
 	[Client]

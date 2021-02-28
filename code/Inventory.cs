@@ -11,8 +11,6 @@ partial class DmInventory : BaseInventory
 
 	public override bool Add( Entity ent, bool makeActive = false )
 	{
-		(Owner as DeathmatchPlayer).GiveAmmo( AmmoType.Pistol, 2 );
-
 		var weapon = ent as BaseDmWeapon;
 
 		//
@@ -22,11 +20,9 @@ partial class DmInventory : BaseInventory
 		if ( weapon != null && IsCarryingType( ent.GetType() ) )
 		{
 			var ammo = weapon.AmmoClip;
-			var ammoType = weapon.AmmoType;
 
 			if ( ammo > 0 )
 			{
-				(Owner as DeathmatchPlayer).GiveAmmo( ammoType, ammo );
 				Sound.FromWorld( "dm.pickup_ammo", ent.WorldPos );
 			}
 

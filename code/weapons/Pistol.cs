@@ -16,6 +16,7 @@ partial class Pistol : BaseDmWeapon
 
 		SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
 		AmmoClip = 10;
+		AmmoReserve = 20;
 	}
 
 	public override bool CanPrimaryAttack( Player owner )

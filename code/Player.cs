@@ -27,16 +27,11 @@ partial class DeathmatchPlayer : BasePlayer
 		EnableClientsideAnimation = true;
 
 		Dress();
-		ClearAmmo();
 
 		Inventory.Add( new Pistol(), true );
 		Inventory.Add( new Shotgun() );
 		Inventory.Add( new SMG() );
 		Inventory.Add( new Crossbow() );
-
-		GiveAmmo( AmmoType.Pistol, 50 );
-		GiveAmmo( AmmoType.Buckshot, 1000 );
-		GiveAmmo( AmmoType.Crossbow, 4 );
 			 
 		base.Respawn();
 	}
@@ -102,12 +97,6 @@ partial class DeathmatchPlayer : BasePlayer
 			{
 				timeSinceDropped = 0;
 			}
-		}
-
-		if ( Input.Pressed( InputButton.Use ) )
-		{
-			GiveAmmo( AmmoType.Pistol, 1 );
-			NetworkDirty( "Cocks", NetVarGroup.Net );
 		}
 	}
 
