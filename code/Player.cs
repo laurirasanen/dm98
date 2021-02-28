@@ -4,6 +4,10 @@ using System.Linq;
 
 partial class DeathmatchPlayer : BasePlayer
 {
+	// TODO - how is Health defined in base?
+	[Net]
+	public float Armor { get; set; }
+
 	TimeSince timeSinceDropped;
 
 	public DeathmatchPlayer()
@@ -58,6 +62,23 @@ partial class DeathmatchPlayer : BasePlayer
 		EnableDrawing = false;
 	}
 
+	public override void TakeDamage( float damage )
+	{
+		if ( Armor > float.Epsilon)
+		{
+			var armorPen = 0.5f; // TODO - add to weapons
+			var reduction = damage * ( 1.0f - armorPen );
+			
+			// Make armor less effective the more damaged it is
+			var effectiveness = Armor / 100.0f;
+			reduction *= effectiveness;
+
+			Armor = Math.Max( 0, Armor - reduction );
+			damage -= reduction;
+		}
+
+		base.TakeDamage( damage );
+	}
 
 	protected override void Tick()
 	{
@@ -104,6 +125,7 @@ partial class DeathmatchPlayer : BasePlayer
 	public override void StartTouch( Entity other )
 	{
 		if ( IsClient ) return;
+		// TODO - only avoid picking up the one we dropped
 		if ( timeSinceDropped < 1 ) return;
 
 		Inventory.Add( other, Inventory.Active == null );
