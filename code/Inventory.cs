@@ -13,37 +13,26 @@ partial class DmInventory : BaseInventory
 	{
 		var weapon = ent as BaseDmWeapon;
 
-		//
-		// We don't want to pick up the same weapon twice
-		// But we'll take the ammo from it Winky Face
-		//
-		if ( weapon != null && IsCarryingType( ent.GetType() ) )
+		if ( weapon == null )
 		{
-			var ammo = weapon.AmmoClip;
-
-			if ( ammo > 0 )
-			{
-				Sound.FromWorld( "dm.pickup_ammo", ent.WorldPos );
-			}
-
-			ItemRespawn.Taken( ent ); 
-
-			// Despawn it
-			ent.Delete();
 			return false;
 		}
 
-		if ( weapon != null )
-		{
-			Sound.FromWorld( "dm.pickup_weapon", ent.WorldPos );
-		}
+		// Drop existing weapon of same type if carrying
+		DropType( ent.GetType() );
 
+		// Pick up
+		Sound.FromWorld( "dm.pickup_weapon", ent.WorldPos );
 		ItemRespawn.Taken( ent );
 		return base.Add( ent, makeActive );
 	}
 
-	public bool IsCarryingType( Type t )
+	public bool DropType( Type t )
 	{
-		return List.Any( x => x.GetType() == t );
+		var wpn = List.First( x => x.GetType() == t );
+		if (!wpn) return false;
+
+		base.Drop(wpn);
+		return true;
 	}
 }
