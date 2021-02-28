@@ -28,8 +28,10 @@ public class Ammo : Panel
 
 		Clip.Text = $"{weapon.AmmoClip}";
 		Clip.SetClass( "active", weapon.AmmoClip >= 0 );
+		Clip.SetClass( "danger", weapon.AmmoClip <= weapon.ClipSize / 4 );
 
 		Reserve.Text = $" / {weapon.AmmoReserve}";
 		Reserve.SetClass( "active", weapon.AmmoReserve >= 0 );
+		Reserve.SetClass( "danger", weapon.AmmoReserve < weapon.ClipSize );
 	}
 }
