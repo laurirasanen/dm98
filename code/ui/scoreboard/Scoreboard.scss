@@ -1,0 +1,36 @@
+.scoreboard {
+    width: 400px;
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    z-index: 100;
+    flex-direction: column;
+    font-family: Poppins;
+    font-size: 13px;
+    font-weight: 500;
+    color: white;
+
+    .name {
+        flex-grow: 1;
+    }
+
+    .deaths, .kills, .ping {
+        width: 70px;
+        text-align: right;
+    }
+
+    .header {
+        font-weight: 200;
+        opacity: 0.3;
+        border-bottom: 2px solid rgba( white, 0.6 );
+    }
+
+    .canvas {
+        flex-direction: column;
+
+        .entry {
+            margin-bottom: 2px;
+            padding: 4px;
+        }
+    }
+}

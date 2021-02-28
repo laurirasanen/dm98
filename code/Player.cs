@@ -8,6 +8,26 @@ partial class DeathmatchPlayer : BasePlayer
 	[Net]
 	public float Armor { get; set; }
 
+	/// <summary>
+	/// Number of deaths. We use the PlayerInfo system to store these variables because
+	/// we want them to be available to all clients - not just the ones that can see us right now.
+	/// </summary>
+	public virtual int Deaths
+	{
+		get => GetPlayerInfo<int>( "deaths" );
+		set => SetPlayerInfo( "deaths", value );
+	}
+
+	/// <summary>
+	/// Number of kills. We use the PlayerInfo system to store these variables because
+	/// we want them to be available to all clients - not just the ones that can see us right now.
+	/// </summary>
+	public virtual int Kills
+	{
+		get => GetPlayerInfo<int>( "kills" );
+		set => SetPlayerInfo( "kills", value );
+	}
+
 	TimeSince timeSinceDropped;
 
 	public DeathmatchPlayer()
@@ -23,9 +43,9 @@ partial class DeathmatchPlayer : BasePlayer
 		Controller = new WalkController();
 		Animator = new StandardPlayerAnimator();
 		Camera = new FirstPersonCamera();
-		  
-		EnableAllCollisions = true; 
-		EnableDrawing = true; 
+
+		EnableAllCollisions = true;
+		EnableDrawing = true;
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
 		EnableClientsideAnimation = true;
@@ -36,7 +56,7 @@ partial class DeathmatchPlayer : BasePlayer
 		Inventory.Add( new Shotgun() );
 		Inventory.Add( new SMG() );
 		Inventory.Add( new Crossbow() );
-			 
+
 		base.Respawn();
 	}
 	public override void OnKilled()
@@ -64,11 +84,11 @@ partial class DeathmatchPlayer : BasePlayer
 
 	public override void TakeDamage( float damage )
 	{
-		if ( Armor > float.Epsilon)
+		if ( Armor > float.Epsilon )
 		{
 			var armorPen = 0.5f; // TODO - add to weapons
 			var reduction = damage * ( 1.0f - armorPen );
-			
+
 			// Make armor less effective the more damaged it is
 			var effectiveness = Armor / 100.0f;
 			reduction *= effectiveness;
@@ -84,17 +104,27 @@ partial class DeathmatchPlayer : BasePlayer
 	{
 		base.Tick();
 
-		if ( Input.Pressed( InputButton.Slot1 ) ) Inventory.SetActiveSlot( 0, true );
-		if ( Input.Pressed( InputButton.Slot2 ) ) Inventory.SetActiveSlot( 1, true );
-		if ( Input.Pressed( InputButton.Slot3 ) ) Inventory.SetActiveSlot( 2, true );
-		if ( Input.Pressed( InputButton.Slot4 ) ) Inventory.SetActiveSlot( 3, true );
-		if ( Input.Pressed( InputButton.Slot5 ) ) Inventory.SetActiveSlot( 4, true );
-		if ( Input.Pressed( InputButton.Slot6 ) ) Inventory.SetActiveSlot( 5, true );
-		if ( Input.Pressed( InputButton.Slot7 ) ) Inventory.SetActiveSlot( 6, true );
-		if ( Input.Pressed( InputButton.Slot8 ) ) Inventory.SetActiveSlot( 7, true );
-		if ( Input.Pressed( InputButton.Slot9 ) ) Inventory.SetActiveSlot( 8, true );
+		if ( Input.Pressed( InputButton.Slot1 ) )
+			Inventory.SetActiveSlot( 0, true );
+		if ( Input.Pressed( InputButton.Slot2 ) )
+			Inventory.SetActiveSlot( 1, true );
+		if ( Input.Pressed( InputButton.Slot3 ) )
+			Inventory.SetActiveSlot( 2, true );
+		if ( Input.Pressed( InputButton.Slot4 ) )
+			Inventory.SetActiveSlot( 3, true );
+		if ( Input.Pressed( InputButton.Slot5 ) )
+			Inventory.SetActiveSlot( 4, true );
+		if ( Input.Pressed( InputButton.Slot6 ) )
+			Inventory.SetActiveSlot( 5, true );
+		if ( Input.Pressed( InputButton.Slot7 ) )
+			Inventory.SetActiveSlot( 6, true );
+		if ( Input.Pressed( InputButton.Slot8 ) )
+			Inventory.SetActiveSlot( 7, true );
+		if ( Input.Pressed( InputButton.Slot9 ) )
+			Inventory.SetActiveSlot( 8, true );
 
-		if ( Input.MouseWheel != 0 ) Inventory.SwitchActiveSlot( Input.MouseWheel, true );
+		if ( Input.MouseWheel != 0 )
+			Inventory.SwitchActiveSlot( Input.MouseWheel, true );
 
 		if ( LifeState != LifeState.Alive )
 			return;
@@ -124,9 +154,11 @@ partial class DeathmatchPlayer : BasePlayer
 
 	public override void StartTouch( Entity other )
 	{
-		if ( IsClient ) return;
+		if ( IsClient )
+			return;
 		// TODO - only avoid picking up the one we dropped
-		if ( timeSinceDropped < 1 ) return;
+		if ( timeSinceDropped < 1 )
+			return;
 
 		Inventory.Add( other, Inventory.Active == null );
 	}
