@@ -5,29 +5,31 @@ using Sandbox.UI.Construct;
 
 public class Ammo : Panel
 {
-	public Label Weapon;
-	public Label Inventory;
+	public Label Clip;
+	public Label Reserve;
 
 	public Ammo()
 	{
-		Weapon = Add.Label( "100", "weapon" );
-		Inventory = Add.Label( "100", "inventory" );
+		Clip = Add.Label( "0", "clip" );
+		Reserve = Add.Label( "0", "reserve" );
 	}
 
 	public override void Tick()
 	{
 		var player = Player.Local;
-		if ( player == null ) return;
+		if ( player == null )
+			return;
 
 		var weapon = player.ActiveChild as BaseDmWeapon;
 		SetClass( "active", weapon != null );
 
-		if ( weapon == null ) return;
+		if ( weapon == null )
+			return;
 
-		Weapon.Text = $"{weapon.AmmoClip}";
+		Clip.Text = $"{weapon.AmmoClip}";
+		Clip.SetClass( "active", weapon.AmmoClip >= 0 );
 
-		var inv = weapon.AvailableAmmo();
-		Inventory.Text = $" / {inv}";
-		Inventory.SetClass( "active", inv >= 0 );
+		Reserve.Text = $" / {weapon.AmmoReserve}";
+		Reserve.SetClass( "active", weapon.AmmoReserve >= 0 );
 	}
 }
