@@ -47,29 +47,29 @@ class DeathmatchGamemode : BaseGamemode
 	[Replicate]
 	public int RoundTimerSeconds { get; set; }
 
-	[ConsoleVariable( Name = "round_time", Help = "Duration of a round" )]
-	public static double RoundTime { get; set; } = 120;
+	[ReplicatedVar( Help = "Duration of a round" )]
+	public static float round_time { get; set; } = 120.0f;
 
-	[ConsoleVariable( Name = "round_freeze_time", Help = "Duration of freeze time at round start" )]
-	private static double RoundFreezeTime { get; set; } = 5.0;
+	[ReplicatedVar( Help = "Duration of freeze time at round start" )]
+	private static float round_freeze_time { get; set; } = 5.0f;
 
-	[ConsoleVariable( Name = "round_buy_time", Help = "Duration of buy time at round start" )]
-	private static double RoundBuyTime { get; set; } = 15.0;
+	[ReplicatedVar( Help = "Duration of buy time at round start" )]
+	private static float round_buy_time { get; set; } = 15.0f;
 
-	[ConsoleVariable( Name = "warmup_time", Help = "Duration of warmup time after all players have connected" )]
-	private static double WarmupTime { get; set; } = 30.0;
+	[ReplicatedVar( Help = "Duration of warmup time after all players have connected" )]
+	private static float warmup_time { get; set; } = 30.0f;
 
-	[ConsoleVariable( Name = "round_over_time", Help = "Duration of round over" )]
-	private static double RoundOverTime { get; set; } = 5.0;
+	[ReplicatedVar( Help = "Duration of round over" )]
+	private static float round_over_time { get; set; } = 5.0f;
 
-	[ConsoleVariable( Name = "game_over_time", Help = "Duration of game over" )]
-	private static double GameOverTime { get; set; } = 15.0;
+	[ReplicatedVar( Help = "Duration of game over" )]
+	private static float game_over_time { get; set; } = 15.0f;
 
-	[ConsoleVariable( Name = "players_wait_time", Help = "How long to wait for players to connect" )]
-	private static double PlayersWaitTime { get; set; } = 120.0;
+	[ReplicatedVar( Help = "How long to wait for players to connect" )]
+	private static float players_wait_time { get; set; } = 120.0f;
 
-	[ConsoleVariable( Name = "players_needed", Help = "How many players needed to start a round" )]
-	public static int PlayersNeeded { get; set; } = 8;
+	[ReplicatedVar( Help = "How many players needed to start a round" )]
+	public static int players_needed { get; set; } = 8;
 
 	protected List<Player> _players;
 	public int PlayerCount => _players.Count;
@@ -120,7 +120,7 @@ class DeathmatchGamemode : BaseGamemode
 			RoundTimerSeconds = 0;
 			PlayersWaiting = 0;
 
-			_timeToWarmup = Time.Now + PlayersWaitTime;
+			_timeToWarmup = Time.Now + players_wait_time;
 
 			_players = new List<Player>();
 		}
@@ -214,7 +214,7 @@ class DeathmatchGamemode : BaseGamemode
 	{
 		PlayersWaiting = PlayerCount;
 
-		bool allConnected = PlayerCount >= PlayersNeeded;
+		bool allConnected = PlayerCount >= players_needed;
 
 		if ( allConnected )
 		{
@@ -239,9 +239,9 @@ class DeathmatchGamemode : BaseGamemode
 			return;
 		}
 
-		Hud.Current.BroadcastMessage( $"Players connected, game starting in {WarmupTime} seconds" );
+		Hud.Current.BroadcastMessage( $"Players connected, game starting in {warmup_time} seconds" );
 
-		_timeToFreezeTime = Time.Now + WarmupTime;
+		_timeToFreezeTime = Time.Now + warmup_time;
 		SwitchPhase( Phase.RoundFreezeTime );
 	}
 
@@ -256,7 +256,7 @@ class DeathmatchGamemode : BaseGamemode
 
 		BroadcastRoundStarted();
 
-		_timeToEndRound = Time.Now + RoundTime;
+		_timeToEndRound = Time.Now + round_time;
 		SwitchPhase( Phase.RoundActive );
 	}
 
@@ -289,7 +289,7 @@ class DeathmatchGamemode : BaseGamemode
 
 		BroadcastRoundOver();
 
-		_roundOverTime = Time.Now + RoundOverTime;
+		_roundOverTime = Time.Now + round_over_time;
 		SwitchPhase( Phase.RoundOver );
 	}
 
@@ -319,7 +319,7 @@ class DeathmatchGamemode : BaseGamemode
 		}
 		else
 		{
-			_gameOverTime = Time.Now + GameOverTime;
+			_gameOverTime = Time.Now + game_over_time;
 			SwitchPhase( Phase.GameOver );
 		}
 	}
@@ -353,9 +353,9 @@ class DeathmatchGamemode : BaseGamemode
 	[Multicast]
 	protected void BroadcastRoundStarted()
 	{
-		_timeToEndRound = Time.Now + RoundTime;
+		_timeToEndRound = Time.Now + round_time;
 
-		Hud.Current.Chatbox?.AddMessage( "", $"Round has started! ({RoundTime}) second round", Color.White );
+		Hud.Current.Chatbox?.AddMessage( "", $"Round has started! ({round_time}) second round", Color.White );
 	}
 
 	[Multicast]
