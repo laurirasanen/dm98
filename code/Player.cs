@@ -1,6 +1,7 @@
 ﻿using Sandbox;
 using System;
 using System.Linq;
+using System.Numerics;
 
 partial class DeathmatchPlayer : BasePlayer
 {
@@ -161,5 +162,42 @@ partial class DeathmatchPlayer : BasePlayer
 			return;
 
 		Inventory.Add( other, Inventory.Active == null );
+	}
+
+	float walkBob = 0;
+	float lean = 0;
+	float fov = 0;
+
+	public override void PostCameraSetup( Camera camera )
+	{
+		base.PostCameraSetup( camera );
+
+		var speed = Velocity.Length.LerpInverse( 0, 320 );
+		var forwardspeed = Velocity.Normal.Dot( camera.Rot.Forward );
+
+		var left = camera.Rot.Left;
+		var up = camera.Rot.Up;
+
+		if ( GroundEntity != null )
+		{
+			walkBob += Time.Delta * 25.0f * speed;
+		}
+
+		camera.Pos += up * MathF.Sin( walkBob ) * speed * 2;
+		camera.Pos += left * MathF.Sin( walkBob * 0.6f ) * speed * 1;
+
+		// Camera lean
+		lean = lean.LerpTo( Velocity.Dot( camera.Rot.Right ) * 0.06f, Time.Delta * 15.0f );
+
+		var appliedLean = lean;
+		appliedLean += MathF.Sin( walkBob ) * speed * 0.2f;
+		camera.Rot *= Rotation.From( 0, 0, appliedLean );
+
+		speed = (speed - 0.7f).Clamp( 0, 1 ) * 3.0f;
+
+		fov = fov.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 2.0f ); 
+
+		camera.FieldOfView += fov;
+
 	}
 }
