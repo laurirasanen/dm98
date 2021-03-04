@@ -195,4 +195,19 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 		// CLICK
 	}
 
+	public override void CreateViewModel()
+	{
+		Host.AssertClient();
+
+		if ( string.IsNullOrEmpty( ViewModelPath ) )
+			return;
+
+		ViewModelEntity = new DmViewModel();
+		ViewModelEntity.WorldPos = WorldPos;
+		ViewModelEntity.Parent = this;
+		ViewModelEntity.Owner = Owner;
+		ViewModelEntity.EnableViewmodelRendering = true;
+		ViewModelEntity.SetModel( ViewModelPath );
+	}
+
 }

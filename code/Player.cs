@@ -164,14 +164,24 @@ partial class DeathmatchPlayer : BasePlayer
 		Inventory.Add( other, Inventory.Active == null );
 	}
 
-	float walkBob = 0;
-	float lean = 0;
-	float fov = 0;
+
 
 	public override void PostCameraSetup( Camera camera )
 	{
 		base.PostCameraSetup( camera );
 
+		if ( camera is FirstPersonCamera )
+		{
+			AddCameraEffects( camera );
+		}
+	}
+
+	float walkBob = 0;
+	float lean = 0;
+	float fov = 0;
+
+	private void AddCameraEffects( Camera camera )
+	{
 		var speed = Velocity.Length.LerpInverse( 0, 320 );
 		var forwardspeed = Velocity.Normal.Dot( camera.Rot.Forward );
 
@@ -195,9 +205,8 @@ partial class DeathmatchPlayer : BasePlayer
 
 		speed = (speed - 0.7f).Clamp( 0, 1 ) * 3.0f;
 
-		fov = fov.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 2.0f ); 
+		fov = fov.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 2.0f );
 
 		camera.FieldOfView += fov;
-
 	}
 }
