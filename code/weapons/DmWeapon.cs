@@ -9,20 +9,19 @@ using System.Threading.Tasks;
 
 partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 {
-
-	[Net]
-	public int AmmoClip { get; set; }
-
-	[Net]
-	public int AmmoReserve { get; set; }
-
 	public virtual int ClipSize => 16;
 	public virtual float ReloadTime => 3.0f;
 
-	[Net]
+	[NetPredicted]
+	public int AmmoClip { get; set; }
+
+	[NetPredicted]
+	public int AmmoReserve { get; set; }
+
+	[NetPredicted]
 	public TimeSince TimeSinceReload { get; set; }
 
-	[Net]
+	[NetPredicted]
 	public bool IsReloading { get; set; }
 
 
@@ -42,25 +41,19 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 
 	public override void Reload( Player owner )
 	{
-		if ( IsClient || IsReloading )
+		if ( IsReloading )
 			return;
 
 		if ( AmmoClip >= ClipSize )
 			return;
 
+		if ( AmmoReserve <= 0 )
+			return;
+
 		TimeSinceReload = 0;
-
-		using ( Prediction.Off() )
-		{
-			if ( AmmoReserve <= 0 )
-				return;
-
-			StartReloadEffects();
-
-			IsReloading = true;
-			Owner.SetAnimParam( "b_reload", true ); 
-			StartReloadEffects();
-		}
+		IsReloading = true;
+		Owner.SetAnimParam( "b_reload", true );
+		StartReloadEffects();
 	}
 
 	public override void OnPlayerControlTick( Player owner )
@@ -70,12 +63,9 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 			base.OnPlayerControlTick( owner );
 		}
 
-		if ( IsServer && IsReloading && TimeSinceReload > ReloadTime )
+		if ( IsReloading && TimeSinceReload > ReloadTime )
 		{
-			using ( Prediction.Off() )
-			{
-				OnReloadFinish();
-			}
+			OnReloadFinish();
 		}
 	}
 
@@ -117,8 +107,10 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 		{
 			tr.Surface.DoBulletImpact( tr );
 
-			if ( !IsServer ) continue;
-			if ( !tr.Entity.IsValid() ) continue;
+			if ( !IsServer )
+				continue;
+			if ( !tr.Entity.IsValid() )
+				continue;
 
 			//
 			// We turn predictiuon off for this, so aany exploding effects don't get culled etc
@@ -143,7 +135,7 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 		PlaySound( "rust_pistol.shoot" );
 		Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
 
-		if (Owner == Player.Local)
+		if ( Owner == Player.Local )
 		{
 			new Sandbox.ScreenShake.Perlin();
 		}
@@ -157,7 +149,7 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 	public virtual void ShootBullet( float spread, float force, float damage, float bulletSize )
 	{
 		var forward = Owner.EyeRot.Forward;
-		forward += (Vector3.Random + Vector3.Random + Vector3.Random + Vector3.Random) * spread * 0.25f;
+		forward += ( Vector3.Random + Vector3.Random + Vector3.Random + Vector3.Random ) * spread * 0.25f;
 		forward = forward.Normal;
 
 		//
@@ -168,8 +160,10 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 		{
 			tr.Surface.DoBulletImpact( tr );
 
-			if ( !IsServer ) continue;
-			if ( !tr.Entity.IsValid() ) continue;
+			if ( !IsServer )
+				continue;
+			if ( !tr.Entity.IsValid() )
+				continue;
 
 			//
 			// We turn predictiuon off for this, so any exploding effects don't get culled etc

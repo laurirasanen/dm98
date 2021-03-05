@@ -7,7 +7,7 @@ partial class Crossbow : BaseDmWeapon, IPlayerCamera, IPlayerInput
 
 	public override float PrimaryRate => 1;
 
-	[Net]
+	[NetPredicted]
 	public bool Zoomed { get; set; }
 
 	public override void Spawn()
