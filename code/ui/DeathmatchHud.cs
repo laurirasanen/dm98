@@ -28,6 +28,7 @@ public partial class DeathmatchHud : Hud
 
 		RootPanel.AddChild<ChatBox>();
 		RootPanel.AddChild<KillFeed>();
+		RootPanel.AddChild<Scoreboard>();
 		//GameFeed = RootPanel.Add.PanelWithClass( "gamefeed" );
 	}
 
