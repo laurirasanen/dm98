@@ -81,7 +81,7 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 		AmmoReserve -= ammo;
 	}
 
-	[Client]
+	[ClientRpc]
 	public virtual void StartReloadEffects()
 	{
 		ViewModelEntity?.SetAnimParam( "reload", true );
@@ -127,7 +127,7 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 		}
 	}
 
-	[Client]
+	[ClientRpc]
 	protected virtual void ShootEffects()
 	{
 		Host.AssertClient();
@@ -189,7 +189,7 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 		return true;
 	}
 
-	[Client]
+	[ClientRpc]
 	public virtual void DryFire()
 	{
 		// CLICK

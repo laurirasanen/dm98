@@ -8,7 +8,7 @@ partial class DeathmatchPlayer
 	// TODO - make ragdolls dissapear after a load of seconds
 	static EntityLimit RagdollLimit = new EntityLimit { MaxTotal = 20 };
 
-	[Client]
+	[ClientRpc]
 	void BecomeRagdollOnClient()
 	{
 		// TODO - lets not make everyone write this shit out all the time

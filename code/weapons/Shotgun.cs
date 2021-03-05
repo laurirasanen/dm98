@@ -74,7 +74,7 @@ partial class Shotgun : BaseDmWeapon
 		}
 	}
 
-	[Client]
+	[ClientRpc]
 	protected override void ShootEffects()
 	{
 		Host.AssertClient();
@@ -91,7 +91,7 @@ partial class Shotgun : BaseDmWeapon
 		}
 	}
 
-	[Client]
+	[ClientRpc]
 	protected virtual void DoubleShootEffects()
 	{
 		Host.AssertClient();
@@ -137,7 +137,7 @@ partial class Shotgun : BaseDmWeapon
 		}
 	}
 
-	[Client]
+	[ClientRpc]
 	protected virtual void FinishReload()
 	{
 		ViewModelEntity?.SetAnimParam( "reload_finished", true );

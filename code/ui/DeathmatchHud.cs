@@ -31,7 +31,7 @@ public partial class DeathmatchHud : Hud
 		//GameFeed = RootPanel.Add.PanelWithClass( "gamefeed" );
 	}
 
-	[Client]
+	[ClientRpc]
 	public void OnPlayerDied( string victim, string attacker = null )
 	{
 		Host.AssertClient();
@@ -58,7 +58,7 @@ public partial class DeathmatchHud : Hud
 		*/
 	}
 
-	[Client]
+	[ClientRpc]
 	public void ShowDeathScreen( string attackerName )
 	{
 		Host.AssertClient();

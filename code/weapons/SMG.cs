@@ -50,7 +50,7 @@ partial class SMG : BaseDmWeapon
 		// Grenade lob
 	}
 
-	[Client]
+	[ClientRpc]
 	protected override void ShootEffects()
 	{
 		Host.AssertClient();
