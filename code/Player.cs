@@ -5,10 +5,6 @@ using System.Numerics;
 
 partial class DeathmatchPlayer : BasePlayer
 {
-	// TODO - how is Health defined in base?
-	[Net]
-	public float Armor { get; set; }
-
 	/// <summary>
 	/// Number of deaths. We use the PlayerInfo system to store these variables because
 	/// we want them to be available to all clients - not just the ones that can see us right now.
@@ -19,15 +15,22 @@ partial class DeathmatchPlayer : BasePlayer
 		set => SetPlayerInfo( "deaths", value );
 	}
 
-	/// <summary>
-	/// Number of kills. We use the PlayerInfo system to store these variables because
-	/// we want them to be available to all clients - not just the ones that can see us right now.
-	/// </summary>
 	public virtual int Kills
 	{
 		get => GetPlayerInfo<int>( "kills" );
 		set => SetPlayerInfo( "kills", value );
 	}
+
+	public virtual Team Team
+	{
+		get => GetPlayerInfo<int>( "team" );
+		set => SetPlayerInfo( "team", value );
+	}
+
+	// TODO - how is Health defined in base?
+	[Net]
+	public float Armor { get; set; }
+
 
 	TimeSince timeSinceDropped;
 
@@ -201,7 +204,7 @@ partial class DeathmatchPlayer : BasePlayer
 		appliedLean += MathF.Sin( walkBob ) * speed * 0.2f;
 		camera.Rot *= Rotation.From( 0, 0, appliedLean );
 
-		speed = (speed - 0.7f).Clamp( 0, 1 ) * 3.0f;
+		speed = ( speed - 0.7f ).Clamp( 0, 1 ) * 3.0f;
 
 		fov = fov.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 2.0f );
 

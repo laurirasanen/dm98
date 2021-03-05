@@ -29,10 +29,7 @@ partial class GameRobbery : Game
 	private float roundOverTime;
 	private float gameOverTime;
 
-	protected List<Player> _players;
-
 	public float TimeToEndRound => timeToEndRound;
-	public int PlayerCount => _players.Count;
 	public bool PlayerCanSpawn = (Phase == Phase.RoundFreezeTime || Phase == Phase.WaitingForPlayers || Phase == Phase.Warmup);
 
 	[Replicate]
@@ -43,9 +40,6 @@ partial class GameRobbery : Game
 
 	[Replicate]
 	public int RoundTimerSeconds { get; set; }
-
-	[Replicate]
-	public int PlayersWaiting { get; set; } = 0;
 
 	[ReplicatedVar( Help = "Duration of a round" )]
 	public static float round_time { get; set; } = 120.0f;
@@ -78,11 +72,7 @@ partial class GameRobbery : Game
 			Phase = Phase.WaitingForPlayers;
 			Round = 0;
 			RoundTimerSeconds = 0;
-			PlayersWaiting = 0;
-
 			timeToWarmup = Time.Now + players_wait_time;
-
-			_players = new List<Player>();
 		}
 	}
 
@@ -139,8 +129,6 @@ partial class GameRobbery : Game
 
 	protected void TickWaitingForPlayers()
 	{
-		PlayersWaiting = PlayerCount;
-
 		bool allConnected = PlayerCount >= players_needed;
 
 		if ( allConnected )
@@ -199,8 +187,8 @@ partial class GameRobbery : Game
 		}
 		else
 		{
-			var copsLeft = Enumerable.Count(_players.Where(x => x.Team == (int)Team.Cops));
-			var robbersLeft = Enumerable.Count(_players.Where(x => x.Team == (int)Team.Robbers));
+			var copsLeft = PlayerInfo.All.Count(x => x.Get<Team>("team") == Team.Cops);
+			var robbersLeft = PlayerInfo.All.Count(x => x.Get<Team>("team") == Team.Robbers);
 
 			if ( robbersLeft == 0 )
 			{
@@ -227,7 +215,7 @@ partial class GameRobbery : Game
 			return;
 		}
 
-		foreach ( var player in _players )
+		foreach ( var player in PlayerInfo.All )
 		{
 			if ( player == null )
 				continue;
@@ -267,7 +255,7 @@ partial class GameRobbery : Game
 		if ( !Authority )
 			return;
 
-		foreach ( var player in _players )
+		foreach ( var player in PlayerInfo.All )
 		{
 			if ( player == null )
 				continue;
@@ -291,10 +279,10 @@ partial class GameRobbery : Game
 		World.PlaySound2D( "Sounds/ambient/alarms/klaxon1.wav" );
 	}
 
-	public override void OnPlayerJoined( Player player )
+	public override void OnPlayerJoined( PlayerInfo.Entry player )
 	{
-		var cops = Enumerable.Count(_players.Where(x => x.Team == (int)Team.Cops));
-		var robbers = Enumerable.Count(_players.Where(x => x.Team == (int)Team.Robbers));
+		var cops = PlayerInfo.All.Count(x => x.Get<Team>("team") == Team.Cops);
+		var robbers = PlayerInfo.All.Count(x => x.Get<Team>("team") == Team.Robbers);
 		if ( cops < robbers )
 		{
 			player.Team = ( int )Team.Cops;
@@ -303,10 +291,6 @@ partial class GameRobbery : Game
 		{
 			player.Team = ( int )Team.Robbers;
 		}
-
-		_players.Add( player );
-
-		Hud.Current.BroadcastMessage( $"{player.Name} joined the game" );
 
 		if ( Authority )
 		{
@@ -321,15 +305,6 @@ partial class GameRobbery : Game
 		}
 	}
 
-	public override void OnPlayerLeave( Player player )
-	{
-		base.OnPlayerLeave( player );
-
-		_players.Remove( player );
-
-		Hud.Current.BroadcastMessage( $"{player.Name} left the game" );
-	}
-
 	public override void OnPlayerDied( Player player, Controllable controllable )
 	{
 		if ( player == null )
@@ -337,23 +312,8 @@ partial class GameRobbery : Game
 			return;
 		}
 
-		Hud.Current.BroadcastMessage( $"{player.Name} has died" );
-
 		if ( Authority )
 		{
-			var position = controllable.Position;
-			var eyeAngles = controllable.EyeAngles;
-
-			var deathCamera = new DeathCamera();
-			deathCamera.Spawn();
-			player.Controlling = deathCamera;
-
-			deathCamera.Position = position;
-			deathCamera.Teleport( position );
-
-			deathCamera.EyeAngles = eyeAngles;
-			deathCamera.ClientEyeAngles = eyeAngles;
-
 			if ( Phase == Phase.Warmup || Phase == Phase.WaitingForPlayers )
 			{
 				RespawnPlayerLater( player, deathCamera, 3.0 );
@@ -365,32 +325,9 @@ partial class GameRobbery : Game
 		}
 	}
 
-	public override void OnPlayerMessage( string playerName, int team, string message )
-	{
-		var color = TeamColor((Team)team);
-		Hud.Current?.Chatbox?.AddMessage( playerName, message, color );
-	}
-
-	public override bool AllowPlayerMessage( Player sender, Player receiver, string message )
-	{
-		return true;
-	}
-
 	public override void RespawnPlayer( Player player )
 	{
 		Log.Assert( Authority );
-
-		if ( player.Controlling is DeathCamera deathCamera &&
-			deathCamera.IsValid )
-		{
-			deathCamera.ClientClearTarget();
-		}
-
-		player.Controlling?.Destroy();
-
-		var controllable = CreateControllable(player);
-		controllable.Spawn();
-		player.Controlling = controllable;
 
 		var spawnPoint = FindSpawnPoint();
 
@@ -415,35 +352,17 @@ partial class GameRobbery : Game
 		{
 			Log.Warning( "Player {0} couldn't find spawn point", player );
 		}
-
-		controllable.OnRespawned();
 	}
 
 	async void RespawnPlayerLater( Player player, DeathCamera deathCamera, double delay )
 	{
 		await Delay( TimeSpan.FromSeconds( delay ) );
 
-		while ( deathCamera.IsValid && !deathCamera.WantsToRespawn )
-		{
-			await Task.Yield();
-		}
-
 		if ( Phase != Phase.WaitingForPlayers || Phase.Warmup )
 		{
 			return;
 		}
 
-		if ( deathCamera != null && deathCamera.IsValid )
-		{
-			deathCamera.ClientClearTarget();
-			deathCamera.Destroy();
-		}
-
 		RespawnPlayer( player );
-	}
-
-	public override void OnLocalInput()
-	{
-		base.OnLocalInput();
 	}
 }
