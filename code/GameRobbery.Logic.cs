@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Random = Sandbox.Random;
-using Math = Sandbox.Math;
 
 enum Phase
 {
@@ -23,10 +21,19 @@ enum Team : int
 	Robbers,
 }
 
-[ClassLibrary]
-class DeathmatchGamemode : BaseGamemode
+partial class GameRobbery : Game
 {
-	public static DeathmatchGamemode Current { get; set; }
+	private float timeToFreezeTime;
+	private float timeToEndRound;
+	private float timeToWarmup;
+	private float roundOverTime;
+	private float gameOverTime;
+
+	protected List<Player> _players;
+
+	public float TimeToEndRound => timeToEndRound;
+	public int PlayerCount => _players.Count;
+	public bool PlayerCanSpawn = (Phase == Phase.RoundFreezeTime || Phase == Phase.WaitingForPlayers || Phase == Phase.Warmup);
 
 	[Replicate]
 	public Phase Phase { get; set; }
@@ -34,18 +41,11 @@ class DeathmatchGamemode : BaseGamemode
 	[Replicate]
 	public int Round { get; set; }
 
-	private double _timeToFreezeTime;
-	private double _timeToEndRound;
-	private double _timeToWarmup;
-	private double _roundOverTime;
-	private double _gameOverTime;
-
-	public double TimeToEndRound => _timeToEndRound;
-
-	public bool PlayerCanSpawn = (Phase == Phase.RoundFreezeTime || Phase == Phase.WaitingForPlayers || Phase == Phase.Warmup);
-
 	[Replicate]
 	public int RoundTimerSeconds { get; set; }
+
+	[Replicate]
+	public int PlayersWaiting { get; set; } = 0;
 
 	[ReplicatedVar( Help = "Duration of a round" )]
 	public static float round_time { get; set; } = 120.0f;
@@ -71,91 +71,18 @@ class DeathmatchGamemode : BaseGamemode
 	[ReplicatedVar( Help = "How many players needed to start a round" )]
 	public static int players_needed { get; set; } = 8;
 
-	protected List<Player> _players;
-	public int PlayerCount => _players.Count;
-
-	[Replicate]
-	public int PlayersWaiting { get; set; } = 0;
-
-	public static Color TeamColor( Team team )
+	protected override void Init()
 	{
-		switch ( team )
-		{
-			case Team.Cops:
-				return Color.Blue;
-			case Team.Robbers:
-				return Color.Red;
-			case Team.Spectator:
-				return new Color( 0.7, 0.7, 0.7 );
-			default:
-				return Color.White;
-		}
-	}
-
-	public static double TeamSpawnOffset( Team team )
-	{
-		switch ( team )
-		{
-			case Team.Cops:
-				return 70;
-			case Team.Robbers:
-				return 70;
-			case Team.Spectator:
-				return 140;
-			default:
-				return 0;
-		}
-	}
-
-	protected override void Initialize()
-	{
-		base.Initialize();
-
-		Current = this;
-
-		if ( Server )
+		if ( IsServer )
 		{
 			Phase = Phase.WaitingForPlayers;
 			Round = 0;
 			RoundTimerSeconds = 0;
 			PlayersWaiting = 0;
 
-			_timeToWarmup = Time.Now + players_wait_time;
+			timeToWarmup = Time.Now + players_wait_time;
 
 			_players = new List<Player>();
-		}
-
-		PreloadAssets();
-	}
-
-	// Ghetto asset preloading until we do this properly
-	protected static void PreloadAssets()
-	{
-		foreach ( var taunt in BarrelControllable.Taunts )
-		{
-			Sound.Library.Get( taunt, false );
-		}
-
-		Sound.Library.Get( "Sounds/weapons/explode3.wav" );
-		Sound.Library.Get( "Sounds/weapons/explode4.wav" );
-		Sound.Library.Get( "Sounds/weapons/explode5.wav" );
-		Sound.Library.Get( "Sounds/buttons/button17.wav" );
-		Sound.Library.Get( "Sounds/buttons/button17.wav" );
-		Sound.Library.Get( "Sounds/weapons/cguard/charging.wav" );
-		Sound.Library.Get( "Sounds/Weapons/pistol/pistol_fire2.wav", false );
-		SkeletalModel.Library.Get( "models/player/mossman.mdl", false );
-		Model.Library.Get( "models/props_c17/oildrum001_explosive.mdl", false );
-		Material.Library.Get( "Particles/spark.mat" );
-		Material.Library.Get( "Particles/poof.mat" );
-	}
-
-	protected override void Tick()
-	{
-		base.Tick();
-
-		if ( Authority )
-		{
-			ServerTick();
 		}
 	}
 
@@ -218,12 +145,12 @@ class DeathmatchGamemode : BaseGamemode
 
 		if ( allConnected )
 		{
-			_timeToWarmup = Time.Now;
+			timeToWarmup = Time.Now;
 			SwitchPhase( Phase.Warmup );
 		}
 		else
 		{
-			if ( Time.Now > _timeToWarmup )
+			if ( Time.Now > timeToWarmup )
 			{
 				// TODO:
 				// Ran out of waiting time, cancel match?
@@ -234,20 +161,20 @@ class DeathmatchGamemode : BaseGamemode
 
 	protected void TickWarmup()
 	{
-		if ( Time.Now < _timeToWarmup )
+		if ( Time.Now < timeToWarmup )
 		{
 			return;
 		}
 
 		Hud.Current.BroadcastMessage( $"Players connected, game starting in {warmup_time} seconds" );
 
-		_timeToFreezeTime = Time.Now + warmup_time;
+		timeToFreezeTime = Time.Now + warmup_time;
 		SwitchPhase( Phase.RoundFreezeTime );
 	}
 
 	protected void TickRoundFreezeTime()
 	{
-		if ( Time.Now < _timeToFreezeTime )
+		if ( Time.Now < timeToFreezeTime )
 		{
 			return;
 		}
@@ -256,15 +183,15 @@ class DeathmatchGamemode : BaseGamemode
 
 		BroadcastRoundStarted();
 
-		_timeToEndRound = Time.Now + round_time;
+		timeToEndRound = Time.Now + round_time;
 		SwitchPhase( Phase.RoundActive );
 	}
 
 	protected void TickRoundActive()
 	{
-		RoundTimerSeconds = Math.RoundToInt( _timeToEndRound - Time.Now );
+		RoundTimerSeconds = Math.RoundToInt( timeToEndRound - Time.Now );
 
-		var roundActive = Time.Now < _timeToEndRound;
+		var roundActive = Time.Now < timeToEndRound;
 
 		if ( !roundActive )
 		{
@@ -289,13 +216,13 @@ class DeathmatchGamemode : BaseGamemode
 
 		BroadcastRoundOver();
 
-		_roundOverTime = Time.Now + round_over_time;
+		roundOverTime = Time.Now + round_over_time;
 		SwitchPhase( Phase.RoundOver );
 	}
 
 	protected void TickRoundOver()
 	{
-		if ( Time.Now < _roundOverTime )
+		if ( Time.Now < roundOverTime )
 		{
 			return;
 		}
@@ -319,7 +246,7 @@ class DeathmatchGamemode : BaseGamemode
 		}
 		else
 		{
-			_gameOverTime = Time.Now + game_over_time;
+			gameOverTime = Time.Now + game_over_time;
 			SwitchPhase( Phase.GameOver );
 		}
 	}
@@ -328,7 +255,7 @@ class DeathmatchGamemode : BaseGamemode
 	{
 		// TODO: show scoreboard, etc..
 
-		if ( Time.Now > _gameOverTime )
+		if ( Time.Now > gameOverTime )
 		{
 			// TODO: next map
 			LoadMap( "cr_bank" );
@@ -353,7 +280,7 @@ class DeathmatchGamemode : BaseGamemode
 	[Multicast]
 	protected void BroadcastRoundStarted()
 	{
-		_timeToEndRound = Time.Now + round_time;
+		timeToEndRound = Time.Now + round_time;
 
 		Hud.Current.Chatbox?.AddMessage( "", $"Round has started! ({round_time}) second round", Color.White );
 	}
@@ -362,28 +289,6 @@ class DeathmatchGamemode : BaseGamemode
 	protected void BroadcastRoundOver()
 	{
 		World.PlaySound2D( "Sounds/ambient/alarms/klaxon1.wav" );
-	}
-
-	public override Controllable CreateControllable( Player player )
-	{
-		switch ( ( Team )player.Team )
-		{
-			case Team.Spectator:
-				return new SpectatorControllable();
-			case Team.Cops:
-				return new BarrelControllable();
-			case Team.Robbers:
-				return new HumanControllable();
-			default:
-				return null;
-		}
-	}
-
-	public override void LoadMap( string name )
-	{
-		DefaultPostProcess.MotionBlurAmount = 0;
-
-		base.LoadMap( name );
 	}
 
 	public override void OnPlayerJoined( Player player )

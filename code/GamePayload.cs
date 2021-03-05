@@ -4,10 +4,10 @@
 /// This is the heart of the gamemode. It's responsible
 /// for creating the player and stuff.
 /// </summary>
-[ClassLibrary( "dm98", Title = "DM98" )]
-partial class DeathmatchGame : Game
+[ClassLibrary( "payload", Title = "Payload" )]
+partial class GamePayload : Game
 {
-	public DeathmatchGame()
+	public GamePayload()
 	{
 		//
 		// Create the HUD entity. This is always broadcast to all clients
@@ -31,5 +31,17 @@ partial class DeathmatchGame : Game
 		base.PostLevelLoaded();
 
 		ItemRespawn.Init();
+
+		Init();
+	}
+
+	protected override void Tick()
+	{
+		base.Tick();
+
+		if ( Authority )
+		{
+			ServerTick();
+		}
 	}
 }

@@ -1,23 +1,26 @@
 {
-		"name": "Deathmatch 98",
-		"version": "1.0",
+  "name": "Cops and Robbers",
+  "version": "0.1",
 
-		"depends": 
-		[
-			"base",
-			"citizen",
-			"rust"
-		],
+  "depends": [
+    "base",
+    "citizen",
+    "rust"
+  ],
 
-		//
-		// Addons can contain multiple addons, describe them here
-		//
-		"gamemodes":
-		[
-				{
-						"name": "dm98",
-						"title": "Deathmatch 98",
-						"description": "Hurt other players more than they hurt you"
-				}
-		]
+  //
+  // Addons can contain multiple addons, describe them here
+  //
+  "gamemodes": [
+    {
+      "name": "robbery",
+      "title": "Robbery",
+      "description": "Escape with the loot or dispatch the opposition"
+    },
+    {
+      "name": "payload",
+      "title": "Payload",
+      "description": "Push the loot to safety or try to stop it"
+    }
+  ]
 }
