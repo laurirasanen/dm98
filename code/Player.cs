@@ -34,7 +34,6 @@ partial class DeathmatchPlayer : BasePlayer
 	public DeathmatchPlayer()
 	{
 		Inventory = new DmInventory( this );
-		EnableClientsideAnimation = true;
 	}
 
 	public override void Respawn()
@@ -49,7 +48,6 @@ partial class DeathmatchPlayer : BasePlayer
 		EnableDrawing = true;
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
-		EnableClientsideAnimation = true;
 
 		Dress();
 
