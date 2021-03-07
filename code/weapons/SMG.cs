@@ -64,7 +64,8 @@ partial class SMG : BaseDmWeapon
 			new Sandbox.ScreenShake.Perlin(0.5f, 4.0f, 1.0f, 0.5f);
 		}
 
-		ViewModelEntity?.SetAnimParam( "fire", true ); 
+		ViewModelEntity?.SetAnimParam( "fire", true );
+		CrosshairPanel?.OnEvent( "fire" );
 	}
 
 	public override void TickPlayerAnimator( PlayerAnimator anim )

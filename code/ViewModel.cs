@@ -5,41 +5,18 @@ using System.Linq;
 partial class DmViewModel : BaseViewModel
 {
 	float walkBob = 0;
-	Rotation lastRot = Rotation.Identity;
 
 	public override void UpdateCamera( Camera camera )
 	{
 		base.UpdateCamera( camera );
-
-		if ( lastRot == Rotation.Identity )
-			lastRot = WorldRot;
 
 		AddCameraEffects( camera );
 	}
 
 	private void AddCameraEffects( Camera camera )
 	{
-		//
-		// If the angle of the viewmodel right now and the angle if wasnt to be is higher than 
-		// allowance degrees then snap it to the edge of that circle.
-		// If it's less, then slowly drift to the center
-		//
-		var angleDiff = Rotation.Difference( lastRot, WorldRot );
-		var angleDiffDegrees = angleDiff.Angle();
-		var allowance = 10.0f;
 
-		if ( angleDiffDegrees > allowance )
-		{
-			// We could have a function that clamps a rotation to within x degrees of another rotation?
-			lastRot = Rotation.Lerp( lastRot, WorldRot, 1.0f - (allowance / angleDiffDegrees) );
-		}
-		else
-		{
-			lastRot = Rotation.Lerp( lastRot, WorldRot, Time.Delta * 0.2f * angleDiffDegrees );
-		}
-
-		
-		WorldRot = lastRot;
+		WorldRot = Player.Local.EyeRot;
 
 		//
 		// Bob up and down based on our walk movement
