@@ -3,7 +3,7 @@
 [ClassLibrary( "dm_crossbow", Title = "Crossbow" )]
 partial class Crossbow : BaseDmWeapon, IPlayerCamera, IPlayerInput
 { 
-	public override string ViewModelPath => "weapons/rust_pistol/v_rust_pistol.vmdl";
+	public override string ViewModelPath => "weapons/rust_crossbow/v_rust_crossbow.vmdl";
 
 	public override float PrimaryRate => 1;
 	public override int Bucket => 3;
@@ -15,7 +15,7 @@ partial class Crossbow : BaseDmWeapon, IPlayerCamera, IPlayerInput
 	{
 		base.Spawn();
 
-		SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
+		SetModel( "weapons/rust_crossbow/rust_crossbow.vmdl" );
 	}
 
 	public override void AttackPrimary( Player owner )
@@ -25,6 +25,8 @@ partial class Crossbow : BaseDmWeapon, IPlayerCamera, IPlayerInput
 			DryFire();
 			return;
 		}
+
+		ShootEffects();
 
 		if ( IsServer )
 		using ( Prediction.Off() )
@@ -58,5 +60,21 @@ partial class Crossbow : BaseDmWeapon, IPlayerCamera, IPlayerInput
 		{
 			owner.ViewAngles = Angles.Lerp( owner.LastViewAngles, owner.ViewAngles, 0.2f );
 		}
+	}
+
+	[ClientRpc]
+	protected override void ShootEffects()
+	{
+		Host.AssertClient();
+
+		//PlaySound( "rust_smg.shoot" );
+
+		if ( Owner == Player.Local )
+		{
+			new Sandbox.ScreenShake.Perlin( 0.5f, 4.0f, 1.0f, 0.5f );
+		}
+
+		ViewModelEntity?.SetAnimParam( "fire", true );
+		CrosshairPanel?.OnEvent( "fire" );
 	}
 }

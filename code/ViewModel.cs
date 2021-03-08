@@ -10,6 +10,8 @@ partial class DmViewModel : BaseViewModel
 	{
 		base.UpdateCamera( camera );
 
+		camera.ViewModelFieldOfView = camera.FieldOfView + (FieldOfView - 80);
+
 		AddCameraEffects( camera );
 	}
 
