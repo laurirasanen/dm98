@@ -85,7 +85,7 @@ public class InventoryBar : Panel, IClientInput
 			input.SuppressButton( InputButton.Attack1 );
 			input.ActiveChild = SelectedWeapon;
 			IsOpen = false;
-			Sound.FromWorld( "dm.ui_select", Camera.LastPos );
+			Sound.FromScreen( "dm.ui_select" );
 			return;
 		}
 
@@ -109,7 +109,7 @@ public class InventoryBar : Panel, IClientInput
 
 		if ( oldSelected  != SelectedWeapon )
 		{
-			Sound.FromWorld( "dm.ui_tap", Camera.LastPos );
+			Sound.FromScreen( "dm.ui_tap" );
 		}
 	}
 

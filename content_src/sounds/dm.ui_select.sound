@@ -11,5 +11,6 @@
 		Pitch = 1.7
 		PitchRandom = 0.0
 		DistanceMax = 1000.0
+		UI = true
 	}
 }
