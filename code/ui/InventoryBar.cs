@@ -61,6 +61,12 @@ public class InventoryBar : Panel, IClientInput
 		wantOpen = wantOpen || input.Pressed( InputButton.Slot5 );
 		wantOpen = wantOpen || input.Pressed( InputButton.Slot6 );
 
+		if ( Weapons.Count == 0 )
+		{
+			IsOpen = false;
+			return;
+		}
+
 		// We're not open, but we want to be
 		if ( IsOpen != wantOpen )
 		{
@@ -70,8 +76,6 @@ public class InventoryBar : Panel, IClientInput
 
 		// Not open fuck it off
 		if ( !IsOpen ) return;
-
-		if ( Weapons.Count == 0 ) return;
 
 		//
 		// Fire pressed when we're open - select the weapon and close.

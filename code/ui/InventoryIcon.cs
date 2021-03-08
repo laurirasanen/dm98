@@ -19,4 +19,12 @@ class InventoryIcon : Panel
 	{
 		SetClass( "active", selectedWeapon == Weapon );
 	}
+
+	public override void Tick()
+	{
+		base.Tick();
+
+		if ( !Weapon.IsValid() || Weapon.Owner != Player.Local )
+			Delete();
+	}
 }

@@ -24,7 +24,7 @@ public class InventoryColumn : Panel
 
 	internal void UpdateWeapon( BaseDmWeapon weapon )
 	{
-		var icon = Icons.FirstOrDefault( x => x.Weapon == weapon );
+		var icon = ChildrenOfType<InventoryIcon>().FirstOrDefault( x => x.Weapon == weapon );
 		if ( icon == null )
 		{
 			icon = new InventoryIcon( weapon );
