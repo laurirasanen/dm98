@@ -106,27 +106,14 @@ partial class DeathmatchPlayer : BasePlayer
 	{
 		base.Tick();
 
-		if ( Input.Pressed( InputButton.Slot1 ) )
-			Inventory.SetActiveSlot( 0, true );
-		if ( Input.Pressed( InputButton.Slot2 ) )
-			Inventory.SetActiveSlot( 1, true );
-		if ( Input.Pressed( InputButton.Slot3 ) )
-			Inventory.SetActiveSlot( 2, true );
-		if ( Input.Pressed( InputButton.Slot4 ) )
-			Inventory.SetActiveSlot( 3, true );
-		if ( Input.Pressed( InputButton.Slot5 ) )
-			Inventory.SetActiveSlot( 4, true );
-		if ( Input.Pressed( InputButton.Slot6 ) )
-			Inventory.SetActiveSlot( 5, true );
-		if ( Input.Pressed( InputButton.Slot7 ) )
-			Inventory.SetActiveSlot( 6, true );
-		if ( Input.Pressed( InputButton.Slot8 ) )
-			Inventory.SetActiveSlot( 7, true );
-		if ( Input.Pressed( InputButton.Slot9 ) )
-			Inventory.SetActiveSlot( 8, true );
+		//
+		// Input requested a weapon switch
+		//
+		if ( Input.ActiveChild != null )
+		{
+			ActiveChild = Input.ActiveChild;
+		}
 
-		if ( Input.MouseWheel != 0 )
-			Inventory.SwitchActiveSlot( Input.MouseWheel, true );
 
 		if ( LifeState != LifeState.Alive )
 			return;
@@ -209,5 +196,13 @@ partial class DeathmatchPlayer : BasePlayer
 		fov = fov.LerpTo( speed * 20 * MathF.Abs( forwardspeed ), Time.Delta * 2.0f );
 
 		camera.FieldOfView += fov;
+
+	//	var tx = new Sandbox.UI.PanelTransform();
+	//	tx.AddRotation( 0, 0, lean * -0.1f );
+
+	//	Hud.CurrentPanel.Style.Transform = tx;
+	//	Hud.CurrentPanel.Style.Dirty();
+
+	}
 	}
 }

@@ -10,6 +10,7 @@ partial class SMG : BaseDmWeapon
 	public override float SecondaryRate => 1.0f;
 	public override int ClipSize => 20;
 	public override float ReloadTime => 4.0f;
+	public override int Bucket => 2;
 
 	public override void Spawn()
 	{

@@ -9,6 +9,7 @@ partial class Shotgun : BaseDmWeapon
 	public override float SecondaryRate => 1;
 	public override int ClipSize => 6;
 	public override float ReloadTime => 0.5f;
+	public override int Bucket => 2;
 
 	public override void Spawn()
 	{

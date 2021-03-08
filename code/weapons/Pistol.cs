@@ -10,6 +10,8 @@ partial class Pistol : BaseDmWeapon
 	public override float SecondaryRate => 1.0f;
 	public override float ReloadTime => 3.0f;
 
+	public override int Bucket => 1;
+
 	public override void Spawn()
 	{
 		base.Spawn();
