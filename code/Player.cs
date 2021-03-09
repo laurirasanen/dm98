@@ -223,5 +223,7 @@ partial class DeathmatchPlayer : BasePlayer
 	{
 		Sound.FromScreen( "dm.ui_attacker" )
 			.SetPitch( 1 + healthinv * 1 );
+
+		HitIndicator.Current?.OnHit( pos, amount );
 	}
 }

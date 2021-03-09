@@ -1,0 +1,43 @@
+﻿hitindicator
+{
+	mix-blend-mode: lighten;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	position: absolute;
+	transition: all 4.5s ease;
+	background-color: #f300;
+	background-image: url( /ui/radial_gradient.png );
+	background-size: cover;
+	background-position: center center;
+
+	&.hit
+	{
+		transition: all 0.1s ease;
+		background-color: #ffaa0011;
+	}
+
+	hitpoint
+	{
+		font-family: Roboto;
+		font-weight: bolder;
+		transform: translateX( -50% ) translateY( -50% );
+		position: absolute;
+		transition: opacity 0.8s ease-out;
+		opacity: 0;
+		color: #ff0;
+		font-size: 14px;
+
+		label
+		{
+			text-shadow: 0px 0px 10px #fa0;
+		}
+
+		&:intro
+		{
+			opacity: 0.5;
+		}
+	}
+}
