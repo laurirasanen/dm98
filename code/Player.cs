@@ -204,5 +204,29 @@ partial class DeathmatchPlayer : BasePlayer
 	//	Hud.CurrentPanel.Style.Dirty();
 
 	}
+
+	public override void TakeDamage( DamageInfo info )
+	{
+		// hack - hitbox 0 is head
+		// we should be able to get this from somewhere
+		if ( info.HitboxIndex == 0 )
+		{
+			info.Damage *= 2.0f;
+		}
+
+		base.TakeDamage( info );
+
+		if ( info.Attacker is DeathmatchPlayer attacker )
+		{
+			// Note - sending this only to the attacker!
+			attacker.DidDamage( attacker, info.Position, info.Damage, ((float)Health).LerpInverse( 100, 0 ) );
+		}
+	}
+
+	[ClientRpc]
+	public void DidDamage( Vector3 pos, float amount, float healthinv )
+	{
+		Sound.FromScreen( "dm.ui_attacker" )
+			.SetPitch( 1 + healthinv * 1 );
 	}
 }
