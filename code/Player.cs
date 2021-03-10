@@ -216,6 +216,8 @@ partial class DeathmatchPlayer : BasePlayer
 			// Note - sending this only to the attacker!
 			attacker.DidDamage( attacker, info.Position, info.Damage, ((float)Health).LerpInverse( 100, 0 ) );
 		}
+
+		TookDamage( this, info.Weapon.IsValid() ? info.Weapon.WorldPos : info.Attacker.WorldPos );
 	}
 
 	[ClientRpc]
@@ -225,5 +227,13 @@ partial class DeathmatchPlayer : BasePlayer
 			.SetPitch( 1 + healthinv * 1 );
 
 		HitIndicator.Current?.OnHit( pos, amount );
+	}
+
+	[ClientRpc]
+	public void TookDamage( Vector3 pos )
+	{
+		//DebugOverlay.Sphere( pos, 5.0f, Color.Red, false, 50.0f );
+
+		DamageIndicator.Current?.OnHit( pos );
 	}
 }
