@@ -10,8 +10,7 @@ partial class CrossbowBolt : ModelEntity, IPhysicsUpdate
 	{
 		base.Spawn();
 
-		// TODO BOLT MODEL
-		SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
+		SetModel( "weapons/rust_crossbow/rust_crossbow_bolt.vmdl" );
 	}
 
 
@@ -24,8 +23,9 @@ partial class CrossbowBolt : ModelEntity, IPhysicsUpdate
 
 		if ( Stuck )
 		{
-			if ( TimeSinceStuck > 5 )
+			if ( TimeSinceStuck > 20.0f )
 				Delete();
+
 			return;
 		}
 
