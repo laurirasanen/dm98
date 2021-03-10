@@ -7,16 +7,16 @@
 	top: 0;
 	bottom: 0;
 	position: absolute;
-	transition: all 4.5s ease;
-	background-color: #f300;
+	transition: all 0.8s ease;
 	background-image: url( /ui/radial_gradient.png );
-	background-size: cover;
+	background-size: 100% 100%;
 	background-position: center center;
+	background-color: #fa00;
 
 	&.hit
 	{
 		transition: all 0.1s ease;
-		background-color: #ffaa0011;
+		background-color: #fa0a;
 	}
 
 	hitpoint
