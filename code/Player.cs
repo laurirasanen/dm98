@@ -211,7 +211,7 @@ partial class DeathmatchPlayer : BasePlayer
 
 		base.TakeDamage( info );
 
-		if ( info.Attacker is DeathmatchPlayer attacker )
+		if ( info.Attacker is DeathmatchPlayer attacker && attacker != this )
 		{
 			// Note - sending this only to the attacker!
 			attacker.DidDamage( attacker, info.Position, info.Damage, ((float)Health).LerpInverse( 100, 0 ) );
