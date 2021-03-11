@@ -18,8 +18,10 @@ partial class DeathmatchPlayer
 		ent.Rot = Rot;
 		ent.MoveType = MoveType.Physics;
 		ent.UsePhysicsCollision = true;
-		ent.EnableAllCollisions = true;
-		ent.CollisionGroup = CollisionGroup.Debris;
+		ent.SetInteractsAs( CollisionLayer.Debris );
+		ent.SetInteractsWith( CollisionLayer.WORLD_GEOMETRY );
+		ent.SetInteractsExclude( CollisionLayer.Player | CollisionLayer.Debris );
+
 		ent.SetModel( GetModelName() );
 		ent.CopyBonesFrom( this );
 		ent.SetRagdollVelocityFrom( this );
