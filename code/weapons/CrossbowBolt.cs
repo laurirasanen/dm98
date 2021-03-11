@@ -4,7 +4,6 @@
 partial class CrossbowBolt : ModelEntity, IPhysicsUpdate
 {
 	bool Stuck;
-	TimeSince TimeSinceStuck;
 
 	public override void Spawn()
 	{
@@ -22,12 +21,7 @@ partial class CrossbowBolt : ModelEntity, IPhysicsUpdate
 			return;
 
 		if ( Stuck )
-		{
-			if ( TimeSinceStuck > 20.0f )
-				Delete();
-
 			return;
-		}
 
 		float Speed = 100.0f;
 		var velocity = Rot.Forward * Speed;
@@ -54,7 +48,6 @@ partial class CrossbowBolt : ModelEntity, IPhysicsUpdate
 			// TODO: SPARKY PARTICLES (unless flesh)
 
 			Stuck = true;
-			TimeSinceStuck = 0;
 			WorldPos = tr.EndPos + Rot.Forward * -1;
 
 			if ( tr.Entity.IsValid() )
@@ -86,6 +79,9 @@ partial class CrossbowBolt : ModelEntity, IPhysicsUpdate
 
 			// DebugOverlay.Box( 10.0f, WorldPos, -1, 1, Color.Red );
 			// DebugOverlay.Box( 10.0f, tr.EndPos, -1, 1, Color.Yellow );
+
+			// delete self in 30 seconds
+			_ = DeleteAsync( 30.0f );
 		}
 		else
 		{
