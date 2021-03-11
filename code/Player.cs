@@ -117,6 +117,7 @@ partial class DeathmatchPlayer : BasePlayer
 			var dropped = Inventory.DropActive();
 			if ( dropped != null )
 			{
+				dropped.PhysicsGroup.Velocity = Velocity + (EyeRot.Forward + EyeRot.Up ) * 300;
 				timeSinceDropped = 0;
 			}
 		}
