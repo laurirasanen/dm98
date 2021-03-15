@@ -38,6 +38,7 @@ partial class Shotgun : BaseDmWeapon
 		// Tell the clients to play the shoot effects
 		//
 		ShootEffects();
+		PlaySound( "rust_pumpshotgun.shoot" );
 
 		//
 		// Shoot the bullets
@@ -65,6 +66,7 @@ partial class Shotgun : BaseDmWeapon
 		// Tell the clients to play the shoot effects
 		//
 		DoubleShootEffects();
+		PlaySound( "rust_pumpshotgun.shootdouble" );
 
 		//
 		// Shoot the bullets
@@ -80,7 +82,6 @@ partial class Shotgun : BaseDmWeapon
 	{
 		Host.AssertClient();
 
-		PlaySound( "rust_pumpshotgun.shoot" );
 		Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
 		Particles.Create( "particles/pistol_ejectbrass.vpcf", EffectEntity, "ejection_point" );
 
@@ -99,7 +100,6 @@ partial class Shotgun : BaseDmWeapon
 	{
 		Host.AssertClient();
 
-		PlaySound( "rust_pumpshotgun.shootdouble" );
 		Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
 
 		ViewModelEntity?.SetAnimParam( "fire_double", true );
@@ -109,8 +109,6 @@ partial class Shotgun : BaseDmWeapon
 		{
 			new Sandbox.ScreenShake.Perlin(3.0f, 3.0f, 3.0f);
 		}
-
-
 	}
 
 	public override void OnReloadFinish()

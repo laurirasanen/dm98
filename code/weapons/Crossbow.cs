@@ -67,8 +67,6 @@ partial class Crossbow : BaseDmWeapon, IPlayerCamera, IPlayerInput
 	{
 		Host.AssertClient();
 
-		//PlaySound( "rust_smg.shoot" );
-
 		if ( Owner == Player.Local )
 		{
 			new Sandbox.ScreenShake.Perlin( 0.5f, 4.0f, 1.0f, 0.5f );

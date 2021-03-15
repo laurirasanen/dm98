@@ -38,6 +38,7 @@ partial class SMG : BaseDmWeapon
 		// Tell the clients to play the shoot effects
 		//
 		ShootEffects();
+		PlaySound( "rust_smg.shoot" );
 
 		//
 		// Shoot the bullets
@@ -56,7 +57,6 @@ partial class SMG : BaseDmWeapon
 	{
 		Host.AssertClient();
 
-		PlaySound( "rust_smg.shoot" );
 		Particles.Create( "particles/pistol_muzzleflash.vpcf", EffectEntity, "muzzle" );
 		Particles.Create( "particles/pistol_ejectbrass.vpcf", EffectEntity, "ejection_point" );
 
