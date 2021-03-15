@@ -59,7 +59,9 @@ public partial class DamageIndicator : Panel
 
 		async Task Lifetime()
 		{
-			await Task.Delay( 200 );
+			await Task.Delay( 100 );
+			AddClass( "dying" );
+			await Task.Delay( 500 );
 			Delete();
 		}
 
