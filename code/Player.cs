@@ -55,9 +55,9 @@ partial class DeathmatchPlayer : BasePlayer
 		Dress();
 
 		Inventory.Add( new Pistol(), true );
-		Inventory.Add( new Shotgun() );
-		Inventory.Add( new SMG() );
-		Inventory.Add( new Crossbow() );
+		//Inventory.Add( new Shotgun() );
+		//Inventory.Add( new SMG() );
+		//Inventory.Add( new Crossbow() );
 
 		base.Respawn();
 	}
@@ -119,8 +119,29 @@ partial class DeathmatchPlayer : BasePlayer
 			{
 				dropped.PhysicsGroup.Velocity = Velocity + (EyeRot.Forward + EyeRot.Up ) * 300;
 				timeSinceDropped = 0;
+				SwitchToBestWeapon();
 			}
 		}
+		//
+		// If the current weapon is out of ammo and we last fired it over half a second ago
+		// lets try to switch to a better wepaon
+		//
+		if ( ActiveChild is BaseDmWeapon weapon && !weapon.IsUsable() && weapon.TimeSincePrimaryAttack > 0.5f && weapon.TimeSinceSecondaryAttack > 0.5f )
+		{
+			SwitchToBestWeapon();
+		}
+	}
+
+	public void SwitchToBestWeapon()
+	{
+		var best = Children.Select( x => x as BaseDmWeapon )
+			.Where( x => x.IsValid() && x.IsUsable() )
+			.OrderByDescending( x => x.BucketWeight )
+			.FirstOrDefault();
+
+		if ( best == null ) return;
+
+		ActiveChild = best;
 	}
 
 
@@ -135,6 +156,7 @@ partial class DeathmatchPlayer : BasePlayer
 		Inventory.Add( other, Inventory.Active == null );
 	}
 
+	RealTimeSince timeSinceUpdatedFramerate;
 
 
 	public override void PostCameraSetup( Camera camera )
@@ -144,6 +166,12 @@ partial class DeathmatchPlayer : BasePlayer
 		if ( camera is FirstPersonCamera )
 		{
 			AddCameraEffects( camera );
+		}
+
+		if ( timeSinceUpdatedFramerate > 1 )
+		{
+			timeSinceUpdatedFramerate = 0;
+			UpdateFps( (int) (1.0f / Time.Delta) );
 		}
 	}
 
@@ -186,6 +214,13 @@ partial class DeathmatchPlayer : BasePlayer
 	//	Hud.CurrentPanel.Style.Transform = tx;
 	//	Hud.CurrentPanel.Style.Dirty();
 
+	}
+
+	[OwnerRpc]
+	protected void UpdateFps( int fps )
+	{
+		Log.Info( $"{Host.Name} OwnerRPC - UpdateFPS" );
+		SetScore( "fps", fps );
 	}
 
 	public override void TakeDamage( DamageInfo info )

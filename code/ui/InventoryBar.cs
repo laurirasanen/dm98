@@ -35,7 +35,7 @@ public class InventoryBar : Panel, IClientInput
 		if ( player == null ) return;
 
 		Weapons.Clear();
-		Weapons.AddRange( player.Children.Select( x => x as BaseDmWeapon ).Where( x => x.IsValid() ) );
+		Weapons.AddRange( player.Children.Select( x => x as BaseDmWeapon ).Where( x => x.IsValid() && x.IsUsable() ) );
 
 		foreach ( var weapon in Weapons )
 		{

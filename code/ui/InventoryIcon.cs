@@ -18,6 +18,7 @@ class InventoryIcon : Panel
 	internal void TickSelection( BaseDmWeapon selectedWeapon )
 	{
 		SetClass( "active", selectedWeapon == Weapon );
+		SetClass( "empty", !Weapon?.IsUsable() ?? true );
 	}
 
 	public override void Tick()

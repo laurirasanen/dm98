@@ -27,18 +27,26 @@ inventorycolumn
 	.slot-number
 	{
 		background-color: #fa02;
-		padding: 25px 15px 10px 2px;
-		font-size: 30px;
+		padding: 22px 15px 0px 10px;
+		font-size: 20px;
 		font-weight: bolder;
+		width: 40px;
+		height: 40px;
 	}
 
 	inventoryicon
 	{
-		opacity: 0;
-		width: 20px;
-		height: 0px;
+		opacity: 1;
+		padding: 25px 15px 10px 2px;
+		width: 40px;
+		height: 40px;
 		overflow: hidden;
 		transition: all 0.1s ease-out;
+
+		label
+		{
+			opacity: 0;
+		}
 	}
 
 	opacity: 0.4;
@@ -49,6 +57,7 @@ inventorycolumn
 
 		label
 		{
+			opacity: 1;
 			text-shadow: 0px 0px 20px #f70;
 		}
 
@@ -88,5 +97,12 @@ inventoryicon
 		{
 			text-shadow: 0px 0px 20px #f70;
 		}
+	}
+
+	&.empty
+	{
+		opacity: 0.5;
+		background-color: #c004;
+		color: #f002;
 	}
 }
