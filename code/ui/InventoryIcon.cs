@@ -7,12 +7,13 @@ using System;
 class InventoryIcon : Panel
 {
 	public BaseDmWeapon Weapon;
-	public Label Label;
+	public Panel Icon;
 
 	public InventoryIcon( BaseDmWeapon weapon )
 	{
 		Weapon = weapon;
-		Label = Add.Label( weapon.ClassInfo.Title, "title" );
+		Icon = Add.Panel( "icon" );
+		AddClass( weapon.ClassInfo.Name );
 	}
 
 	internal void TickSelection( BaseDmWeapon selectedWeapon )

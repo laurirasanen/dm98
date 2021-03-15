@@ -11,11 +11,12 @@
     align-items: center;
     justify-content: center;
 	opacity: 0;
-    background-color: rgba( 0, 0, 0, 0.4 );
 	transition: all 0.1s ease-out;
 	transform: scale( 1.05 );
 	transform-origin: 50% 50%;
-    &.open {
+	background-size: 100% 100%;
+	background-position: center center;
+	background-color: rgba( 10, 10, 10, 0.8 );
         opacity: 1;
         transform: scale( 1 );
     }
@@ -29,14 +30,16 @@
         text-align: right;
     }
 
-    .ping {
-        opacity: 0.3;
-        width: 50px;
-    }
+	.ping, .fps
+	{
+		opacity: 0.3;
+		width: 50px;
+	}
 
-    .deaths {
-        margin-right: 50px;
-    }
+	.deaths
+	{
+		margin-right: 50px;
+	}
 
     .header {
         font-weight: 500;
