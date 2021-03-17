@@ -1,6 +1,7 @@
 {
   "name": "Cops and Robbers",
   "version": "0.1",
+  "sharedassets": "*.*",
 
   "depends": [
     "base",
