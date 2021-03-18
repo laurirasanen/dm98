@@ -100,6 +100,8 @@ partial class DeathmatchPlayer : BasePlayer
 		if ( LifeState != LifeState.Alive )
 			return;
 
+		TickPlayerUse();
+
 		if ( Input.Pressed( InputButton.View ) )
 		{
 			if ( Camera is ThirdPersonCamera )
