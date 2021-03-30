@@ -24,6 +24,7 @@ partial class DeathmatchPlayer
 
 		ent.SetModel( GetModelName() );
 		ent.CopyBonesFrom( this );
+		ent.TakeDecalsFrom( this );
 		ent.SetRagdollVelocityFrom( this );
 		ent.DeleteAsync( 20.0f );
 
