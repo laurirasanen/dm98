@@ -119,7 +119,11 @@ partial class DeathmatchPlayer : BasePlayer
 			var dropped = Inventory.DropActive();
 			if ( dropped != null )
 			{
-				dropped.PhysicsGroup.Velocity = Velocity + (EyeRot.Forward + EyeRot.Up ) * 300;
+				if ( dropped.PhysicsGroup != null )
+				{
+					dropped.PhysicsGroup.Velocity = Velocity + (EyeRot.Forward + EyeRot.Up) * 300;
+				}
+
 				timeSinceDropped = 0;
 				SwitchToBestWeapon();
 			}
@@ -146,16 +150,13 @@ partial class DeathmatchPlayer : BasePlayer
 		ActiveChild = best;
 	}
 
-
 	public override void StartTouch( Entity other )
 	{
-		if ( IsClient )
-			return;
 		// TODO - only avoid picking up the one we dropped
 		if ( timeSinceDropped < 1 )
 			return;
 
-		Inventory.Add( other, Inventory.Active == null );
+		base.StartTouch( other );
 	}
 
 	RealTimeSince timeSinceUpdatedFramerate;
