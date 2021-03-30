@@ -36,16 +36,10 @@ public partial class DamageIndicator : Panel
 		{
 			base.Tick();
 
-			var screenPos = WorldPos.ToScreen();
+			var wpos = Camera.LastRot.Inverse * ( WorldPos.WithZ( 0 ) - Camera.LastPos.WithZ( 0 )).Normal;
+			wpos = wpos.WithZ( 0 ).Normal;
 
-			// this is probably all wrong, it's based on the position on the screen
-			// but I think the original hl1 one did kind of a top down view thing, so
-			// at the top meant in front, at the back meant behind. We could probably make 
-			// that mostly work the same here by rotating worldpos by our view pitch
-
-			// TODO - we need screen width and height to make this proper accurate
-
-			var angle = MathF.Atan2( 0.5f - screenPos.x, -1.0f * (0.5f - screenPos.y ) );
+			var angle = MathF.Atan2( wpos.y, -1.0f * wpos.x );
 
 			var pt = new PanelTransform();
 
@@ -59,7 +53,7 @@ public partial class DamageIndicator : Panel
 
 		async Task Lifetime()
 		{
-			await Task.Delay( 100 );
+			await Task.Delay( 200 );
 			AddClass( "dying" );
 			await Task.Delay( 500 );
 			Delete();
