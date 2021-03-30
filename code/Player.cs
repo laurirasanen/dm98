@@ -198,7 +198,7 @@ partial class DeathmatchPlayer : BasePlayer
 		camera.Pos += left * MathF.Sin( walkBob * 0.6f ) * speed * 1;
 
 		// Camera lean
-		lean = lean.LerpTo( Velocity.Dot( camera.Rot.Right ) * 0.06f, Time.Delta * 15.0f );
+		lean = lean.LerpTo( Velocity.Dot( camera.Rot.Right ) * 0.03f, Time.Delta * 15.0f );
 
 		var appliedLean = lean;
 		appliedLean += MathF.Sin( walkBob ) * speed * 0.2f;
