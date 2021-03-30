@@ -49,6 +49,10 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 		base.Spawn();
 
 		SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
+
+		var pickupTrigger = new PickupTrigger();
+		pickupTrigger.Parent = this;
+		pickupTrigger.WorldPos = WorldPos;
 	}
 
 	public override void Reload( Player owner )
