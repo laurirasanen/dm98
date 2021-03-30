@@ -8,10 +8,11 @@
 	bottom: 0;
 	position: absolute;
 	transition: all 0.8s ease;
-	background-image: url( /ui/radial_gradient.png );
+	//background-image: url( /ui/radial_gradient.png );
+	//background-image-tint: #fa00;
 	background-size: 100% 100%;
 	background-position: center center;
-	background-color: #fa00;
+
 
 	&.hit
 	{
