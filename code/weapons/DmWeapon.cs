@@ -30,6 +30,9 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 	public TimeSince TimeSinceDeployed { get; set; }
 
 
+	public PickupTrigger PickupTrigger { get; protected set; }
+
+
 	public int AvailableAmmo()
 	{
 		return AmmoClip + AmmoReserve;
@@ -50,9 +53,9 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 
 		SetModel( "weapons/rust_pistol/rust_pistol.vmdl" );
 
-		var pickupTrigger = new PickupTrigger();
-		pickupTrigger.Parent = this;
-		pickupTrigger.WorldPos = WorldPos;
+		PickupTrigger = new PickupTrigger();
+		PickupTrigger.Parent = this;
+		PickupTrigger.WorldPos = WorldPos;
 	}
 
 	public override void Reload( Player owner )
@@ -241,6 +244,26 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 	{
 		if ( AmmoClip > 0 ) return true;
 		return AvailableAmmo() > 0;
+	}
+
+	public override void OnCarryStart( Entity carrier )
+	{
+		base.OnCarryStart( carrier );
+
+		if ( PickupTrigger.IsValid() )
+		{
+			PickupTrigger.EnableTouch = false;
+		}
+	}
+
+	public override void OnCarryDrop( Entity dropper )
+	{
+		base.OnCarryDrop( dropper );
+
+		if ( PickupTrigger.IsValid() )
+		{
+			PickupTrigger.EnableTouch = true;
+		}
 	}
 
 }
