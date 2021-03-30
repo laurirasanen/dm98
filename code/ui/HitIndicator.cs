@@ -14,54 +14,29 @@ public partial class HitIndicator : Panel
 		StyleSheet = StyleSheet.FromFile( "/ui/HitIndicator.scss" );
 	}
 
-	TimeSince timeSinceHit;
-
 	public override void Tick()
 	{
 		base.Tick();
-		SetClass( "hit", timeSinceHit < 0.1f );
 	}
 
 	public void OnHit( Vector3 pos, float amount )
 	{
-		timeSinceHit = 0;
-
-		var p = new HitPoint( amount, pos );
-		p.Parent = this;
+		new HitPoint( amount, pos, this );
 	}
 
 	public class HitPoint : Panel
 	{
-		public Vector3 WorldPos;
-		Vector3 Velocity;
-
-		public HitPoint( float amount, Vector3 pos )
+		public HitPoint( float amount, Vector3 pos, Panel parent )
 		{
-			WorldPos = pos;
-			Add.Label( $"-{amount}" );
-			Velocity = (Vector3.Random + Vector3.Up ) * Rand.Float( 140, 160 );
-
+			Parent = parent;
 			_ = Lifetime();
-		}
-
-		public override void Tick()
-		{
-			base.Tick();
-
-			this.PositionAtWorld( WorldPos );
-
-			WorldPos += Velocity * Time.Delta;
-
-			Velocity += Vector3.Down * Time.Delta * 500.0f;
 		}
 
 		async Task Lifetime()
 		{
-			await Task.Delay( 1000 );
-			Delete( true );
+			await Task.Delay( 200 );
+			Delete();
 		}
-
-
 	}
 }
 
