@@ -73,9 +73,7 @@ partial class DeathmatchPlayer : BasePlayer
 		//
 		Inventory.DeleteContents();
 
-		BecomeRagdollOnClient();
-
-		// TODO - clear decals
+		BecomeRagdollOnClient( LastDamage.Force, GetHitboxBone( LastDamage.HitboxIndex ) );
 
 		Controller = null;
 		Camera = new SpectateRagdollCamera();
@@ -226,8 +224,12 @@ partial class DeathmatchPlayer : BasePlayer
 		SetScore( "fps", fps );
 	}
 
+	DamageInfo LastDamage;
+
 	public override void TakeDamage( DamageInfo info )
 	{
+		LastDamage = info;
+
 		// hack - hitbox 0 is head
 		// we should be able to get this from somewhere
 		if ( info.HitboxIndex == 0 )
