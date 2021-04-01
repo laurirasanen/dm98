@@ -54,20 +54,18 @@ partial class GamePayload : Game
 	{
 		Log.Info( $"{player.Name} was killed" );
 
-		if ( player.LastAttacker != null )
+		KillFeed.OnPlayerKilled( player );
+
+		if ( Authority )
 		{
-			if ( player.LastAttacker is Player attackPlayer )
+			if ( Phase != Phase.RoundOver && Phase == Phase.GameOver )
 			{
-				KillFeed.AddEntry( attackPlayer.SteamId, attackPlayer.Name, player.SteamId, player.Name, player.LastAttackerWeapon?.ClassInfo?.Name );
+				RespawnPlayer( player );
 			}
 			else
 			{
-				KillFeed.AddEntry( (ulong)player.LastAttacker.NetworkIdent, player.LastAttacker.ToString(), player.SteamId, player.Name, "killed" );
+				// TODO: spec cam
 			}
-		}
-		else
-		{
-			KillFeed.AddEntry( (ulong)0, "", player.SteamId, player.Name, "died" );
 		}
 	}
 }

@@ -305,26 +305,6 @@ partial class GameRobbery : Game
 		}
 	}
 
-	public override void OnPlayerDied( Player player, Controllable controllable )
-	{
-		if ( player == null )
-		{
-			return;
-		}
-
-		if ( Authority )
-		{
-			if ( Phase == Phase.Warmup || Phase == Phase.WaitingForPlayers )
-			{
-				RespawnPlayerLater( player, deathCamera, 3.0 );
-			}
-			else
-			{
-				// TODO: team spec cam
-			}
-		}
-	}
-
 	public override void RespawnPlayer( Player player )
 	{
 		Log.Assert( Authority );

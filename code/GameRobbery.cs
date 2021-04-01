@@ -44,4 +44,26 @@ partial class GameRobbery : Game
 			ServerTick();
 		}
 	}
+
+	/// <summary>
+	/// Called when a player has died, or been killed
+	/// </summary>
+	public override void PlayerKilled( Player player )
+	{
+		Log.Info( $"{player.Name} was killed" );
+
+		KillFeed.OnPlayerKilled( player );
+
+		if ( Authority )
+		{
+			if ( Phase == Phase.Warmup || Phase == Phase.WaitingForPlayers )
+			{
+				RespawnPlayerLater( player, deathCamera, 3.0 );
+			}
+			else
+			{
+				// TODO: team spec cam
+			}
+		}
+	}
 }
