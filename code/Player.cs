@@ -84,24 +84,6 @@ partial class DeathmatchPlayer : BasePlayer
 		EnableDrawing = false;
 	}
 
-	public override void TakeDamage( float damage )
-	{
-		if ( Armor > float.Epsilon )
-		{
-			var armorPen = 0.5f; // TODO - add to weapons
-			var reduction = damage * ( 1.0f - armorPen );
-
-			// Make armor less effective the more damaged it is
-			var effectiveness = Armor / 100.0f;
-			reduction *= effectiveness;
-
-			Armor = Math.Max( 0, Armor - reduction );
-			damage -= reduction;
-		}
-
-		base.TakeDamage( damage );
-	}
-
 	protected override void Tick()
 	{
 		base.Tick();
@@ -212,6 +194,19 @@ partial class DeathmatchPlayer : BasePlayer
 		if ( info.HitboxIndex == 0 )
 		{
 			info.Damage *= 2.0f;
+		}
+
+		if ( Armor > float.Epsilon )
+		{
+			var armorPen = 0.5f; // TODO - add to weapons
+			var reduction = info.Damage * ( 1.0f - armorPen );
+
+			// Make armor less effective the more damaged it is
+			var effectiveness = Armor / 100.0f;
+			reduction *= effectiveness;
+
+			Armor = Math.Max( 0, Armor - reduction );
+			info.Damage -= reduction;
 		}
 
 		base.TakeDamage( info );
