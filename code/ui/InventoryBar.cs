@@ -16,7 +16,7 @@ public class InventoryBar : Panel, IClientInput
 
 	public InventoryBar()
 	{
-		StyleSheet = StyleSheet.FromFile( "/ui/InventoryBar.scss" );
+		StyleSheet.Load( "/ui/InventoryBar.scss" );
 
 		for ( int i=0; i<6; i++ )
 		{

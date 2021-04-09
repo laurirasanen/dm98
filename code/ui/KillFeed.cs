@@ -10,7 +10,7 @@ public partial class KillFeed : Panel
 	{
 		Current = this;
 
-		StyleSheet = StyleSheet.FromFile( "/ui/KillFeed.scss" );
+		StyleSheet.Load( "/ui/KillFeed.scss" );
 	}
 
 	[ClientRpc]
