@@ -172,7 +172,7 @@ partial class DeathmatchPlayer : BasePlayer
 		if ( timeSinceUpdatedFramerate > 1 )
 		{
 			timeSinceUpdatedFramerate = 0;
-			UpdateFps( (int) (1.0f / Time.Delta) );
+			//UpdateFps( (int) (1.0f / Time.Delta) );
 		}
 	}
 
@@ -215,13 +215,6 @@ partial class DeathmatchPlayer : BasePlayer
 	//	Hud.CurrentPanel.Style.Transform = tx;
 	//	Hud.CurrentPanel.Style.Dirty();
 
-	}
-
-	[OwnerRpc]
-	protected void UpdateFps( int fps )
-	{
-		Log.Info( $"{Host.Name} OwnerRPC - UpdateFPS" );
-		SetScore( "fps", fps );
 	}
 
 	DamageInfo LastDamage;
