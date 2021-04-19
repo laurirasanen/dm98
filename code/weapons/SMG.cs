@@ -21,7 +21,7 @@ partial class SMG : BaseDmWeapon
 		AmmoReserve = 40;
 	}
 
-	public override void AttackPrimary( Player owner )
+	public override void AttackPrimary()
 	{
 		TimeSincePrimaryAttack = 0;
 		TimeSinceSecondaryAttack = 0;
@@ -47,7 +47,7 @@ partial class SMG : BaseDmWeapon
 
 	}
 
-	public override void AttackSecondary( Player owner )
+	public override void AttackSecondary()
 	{
 		// Grenade lob
 	}

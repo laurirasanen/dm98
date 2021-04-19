@@ -58,7 +58,7 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 		PickupTrigger.WorldPos = WorldPos;
 	}
 
-	public override void Reload( Player owner )
+	public override void Reload()
 	{
 		if ( IsReloading )
 			return;
@@ -111,7 +111,7 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 		// TODO - player third person model reload
 	}
 
-	public override void AttackPrimary( Player owner )
+	public override void AttackPrimary()
 	{
 		TimeSincePrimaryAttack = 0;
 		TimeSinceSecondaryAttack = 0;
@@ -125,7 +125,7 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 		// ShootBullet is coded in a way where we can have bullets pass through shit
 		// or bounce off shit, in which case it'll return multiple results
 		//
-		foreach ( var tr in TraceBullet( owner.EyePos, owner.EyePos + owner.EyeRot.Forward * 5000 ) )
+		foreach ( var tr in TraceBullet( Owner.EyePos, Owner.EyePos + Owner.EyeRot.Forward * 5000 ) )
 		{
 			tr.Surface.DoBulletImpact( tr );
 
@@ -139,9 +139,9 @@ partial class BaseDmWeapon : BaseWeapon, IRespawnableEntity
 			//
 			using ( Prediction.Off() )
 			{
-				var damage = DamageInfo.FromBullet( tr.EndPos, owner.EyeRot.Forward * 100, 15 )
+				var damage = DamageInfo.FromBullet( tr.EndPos, Owner.EyeRot.Forward * 100, 15 )
 					.UsingTraceResult( tr )
-					.WithAttacker( owner )
+					.WithAttacker( Owner )
 					.WithWeapon( this );
 
 				tr.Entity.TakeDamage( damage );

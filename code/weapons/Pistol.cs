@@ -21,12 +21,12 @@ partial class Pistol : BaseDmWeapon
 		AmmoReserve = 20;
 	}
 
-	public override bool CanPrimaryAttack( Player owner )
+	public override bool CanPrimaryAttack()
 	{
-		return base.CanPrimaryAttack( owner ) && owner.Input.Pressed( InputButton.Attack1 );
+		return base.CanPrimaryAttack() && Owner.Input.Pressed( InputButton.Attack1 );
 	}
 
-	public override void AttackPrimary( Player owner )
+	public override void AttackPrimary()
 	{
 		TimeSincePrimaryAttack = 0;
 		TimeSinceSecondaryAttack = 0;

@@ -34,16 +34,16 @@ partial class Crossbow : BaseDmWeapon, IPlayerCamera, IPlayerInput
 			var bolt = new CrossbowBolt();
 			bolt.WorldPos = Owner.EyePos;
 			bolt.WorldRot = Owner.EyeRot;
-			bolt.Owner = owner;
+			bolt.Owner = Owner;
 			bolt.Velocity = Owner.EyeRot.Forward * 100;
 		}
 	}
 
-	public override void OnPlayerControlTick( Player owner )
+	public override void OnPlayerControlTick( Player player )
 	{
-		base.OnPlayerControlTick( owner );
+		base.OnPlayerControlTick( player );
 
-		Zoomed = owner.Input.Down( InputButton.Attack2 );
+		Zoomed = Owner.Input.Down( InputButton.Attack2 );
 	}
 
 	public virtual void ModifyCamera( Camera cam )
