@@ -4,7 +4,7 @@
 /// This is the heart of the gamemode. It's responsible
 /// for creating the player and stuff.
 /// </summary>
-[ClassLibrary( "payload", Title = "Payload" )]
+[Library( "payload", Title = "Payload" )]
 partial class GamePayload : Game
 {
 	public GamePayload()

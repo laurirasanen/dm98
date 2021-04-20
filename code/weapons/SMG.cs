@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-[ClassLibrary( "dm_smg", Title = "SMG" )]
+[Library( "dm_smg", Title = "SMG" )]
 partial class SMG : BaseDmWeapon
 { 
 	public override string ViewModelPath => "weapons/rust_smg/v_rust_smg.vmdl";

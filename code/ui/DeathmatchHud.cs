@@ -5,7 +5,7 @@ using Sandbox.UI.Construct;
 using System;
 using System.Threading.Tasks;
 
-[ClassLibrary]
+[Library]
 public partial class DeathmatchHud : Hud
 {
 	public DeathmatchHud()

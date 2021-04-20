@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 
 
-[ClassLibrary( "crossbow_bolt" )]
+[Library( "crossbow_bolt" )]
 partial class CrossbowBolt : ModelEntity, IPhysicsUpdate
 {
 	bool Stuck;
