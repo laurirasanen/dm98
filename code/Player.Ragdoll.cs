@@ -14,8 +14,8 @@ partial class DeathmatchPlayer
 		// TODO - lets not make everyone write this shit out all the time
 		// maybe a CreateRagdoll<T>() on ModelEntity?
 		var ent = new ModelEntity();
-		ent.Pos = Pos;
-		ent.Rot = Rot;
+		ent.WorldPos = WorldPos;
+		ent.WorldRot = WorldRot;
 		ent.MoveType = MoveType.Physics;
 		ent.UsePhysicsCollision = true;
 		ent.SetInteractsAs( CollisionLayer.Debris );

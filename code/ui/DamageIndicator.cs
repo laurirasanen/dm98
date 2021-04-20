@@ -23,7 +23,6 @@ public partial class DamageIndicator : Panel
 	public class HitPoint : Panel
 	{
 		public Vector3 WorldPos;
-		Vector3 Velocity;
 
 		public HitPoint( Vector3 pos )
 		{

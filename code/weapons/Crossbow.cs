@@ -18,7 +18,7 @@ partial class Crossbow : BaseDmWeapon, IPlayerCamera, IPlayerInput
 		SetModel( "weapons/rust_crossbow/rust_crossbow.vmdl" );
 	}
 
-	public override void AttackPrimary( Player owner )
+	public override void AttackPrimary()
 	{
 		if ( !TakeAmmo( 1 ) )
 		{
@@ -32,8 +32,8 @@ partial class Crossbow : BaseDmWeapon, IPlayerCamera, IPlayerInput
 		using ( Prediction.Off() )
 		{
 			var bolt = new CrossbowBolt();
-			bolt.Pos = owner.EyePos;
-			bolt.Rot = owner.EyeRot;
+			bolt.WorldPos = Owner.EyePos;
+			bolt.WorldRot = Owner.EyeRot;
 			bolt.Owner = owner;
 			bolt.Velocity = Owner.EyeRot.Forward * 100;
 		}

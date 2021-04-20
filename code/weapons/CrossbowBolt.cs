@@ -25,7 +25,7 @@ partial class CrossbowBolt : ModelEntity, IPhysicsUpdate
 			return;
 
 		float Speed = 100.0f;
-		var velocity = Rot.Forward * Speed;
+		var velocity = WorldRot.Forward * Speed;
 
 		var start = WorldPos;
 		var end = start + velocity;
@@ -49,7 +49,7 @@ partial class CrossbowBolt : ModelEntity, IPhysicsUpdate
 			// TODO: SPARKY PARTICLES (unless flesh)
 
 			Stuck = true;
-			WorldPos = tr.EndPos + Rot.Forward * -1;
+			WorldPos = tr.EndPos + WorldRot.Forward * -1;
 
 			if ( tr.Entity.IsValid() )
 			{
@@ -68,7 +68,7 @@ partial class CrossbowBolt : ModelEntity, IPhysicsUpdate
 			//
 			// Surface impact effect
 			//
-			tr.Normal = Rot.Forward * -1;
+			tr.Normal = WorldRot.Forward * -1;
 			tr.Surface.DoBulletImpact( tr );
 			velocity = default;
 
